@@ -4,7 +4,7 @@ import {createTheme, MuiThemeProvider} from "@material-ui/core";
 
 interface CustomPaginationProps {
     setPage: (val: number) => void;
-    numberOfPages: number
+    numberOfPages: number | undefined
 }
 
 const darkTheme = createTheme({
