@@ -1,30 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import axios from "axios";
 import {img_500, unavailable, unavailableLandscape} from "../../config/config";
-
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        modal: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-        },
-        paper: {
-            width: "90%",
-            height: "80%",
-            backgroundColor: "#39445a",
-            border: "1px solid #282c34",
-            borderRadius: 10,
-            color: "white",
-            boxShadow: theme.shadows[5],
-            padding: theme.spacing(1, 1, 3),
-        },
-    }),
-);
+import {useStyles} from "./ContentModalStyles";
+import {Button} from "@material-ui/core";
+import {YouTube} from "@material-ui/icons";
+import './ContentModal.css'
+import Carousel from "../Carousel/Carousel";
 
 interface ContentModalProps {
     children: any
@@ -68,10 +52,11 @@ const ContentModal = ({children, id, media_type} : ContentModalProps) => {
     }, [])
 
     return (
-        <div>
-            <button type="button" className={"media"} onClick={handleOpen}>
+        <>
+            <div className={"media"} onClick={handleOpen}>
                 {children}
-            </button>
+            </div>
+
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -87,14 +72,52 @@ const ContentModal = ({children, id, media_type} : ContentModalProps) => {
                 <Fade in={open}>
                     {
                         content && <div className={classes.paper}>
-                            <div className="contentModal">
-                                <img alt={content.title} src={content?.poster_path ? `${img_500}/${content?.poster_path}` : unavailable}/>
+                            <div className="ContentModal">
+                                <img
+                                    className={"ContentModal__portrait"}
+                                    alt={content.title || content.name}
+                                    src={content?.poster_path ? `${img_500}/${content?.poster_path}` : unavailable}
+                                />
+                                <img
+                                    className={"ContentModal__landscape"}
+                                    alt={content.title || content.name}
+                                    src={content?.backdrop_path ? `${img_500}/${content?.backdrop_path}` : unavailableLandscape}
+                                />
+                                <div className={"ContentModal__about"}>
+                                    <span className={"ContentModal__title"}>
+                                        {content.name || content.title} (
+                                        {(
+                                            content.first_air_date || content.release_date || "------"
+                                        ).substring(0, 4)}
+                                        )
+                                    </span>
+                                    {
+                                        content.tagline && (
+                                            <i className={"tagline"}>{content.tagline}</i>
+                                        )
+                                    }
+                                    <span className={"ContentModal__description"}>
+                                        {content.overview}
+                                    </span>
+                                    <div>
+                                        <Carousel id={id} media_type={media_type}/>
+                                    </div>
+                                    <Button
+                                        variant={"contained"}
+                                        startIcon={<YouTube/>}
+                                        color={"secondary"}
+                                        target={"__blank"}
+                                        href={`https://www.youtube.com/watch?v=${video}`}
+                                    >
+                                        Watch the Trailer
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     }
                 </Fade>
             </Modal>
-        </div>
+        </>
     );
 };
 

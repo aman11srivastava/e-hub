@@ -22,9 +22,7 @@ export const SingleContent = ({
                                   vote_average
                               }: SingleContentProps) => {
     return (
-        <div className={"media"}
-                      // media_type={media_type} id={id}
-        >
+        <ContentModal className={"media"} media_type={media_type} id={id}>
             <Badge
                 badgeContent={vote_average}
                 color={vote_average > 6 ? "primary" : "secondary"}
@@ -33,7 +31,7 @@ export const SingleContent = ({
             <b className={"title"}>{title}</b>
             <span className={"subTitle"}>{media_type === 'tv' ? "TV Series" : "Movie"}</span>
             <span className={"subTitle"}>{date}</span>
-        </div>
+        </ContentModal>
     )
 }
 
